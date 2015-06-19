@@ -8,17 +8,24 @@ function FQL (db, collectionName) {
 }
 
 FQL.prototype.exec = function (cb) {
-	if(!this.limit){
+	var i = 0;
+	var limit = this.limit;
+	var limiterator = function () {
+		i++;
+		return i > limit;
+	}
+	var selection = this.selection;
+	var selecterator = function () {
+		done(false);
+	}
+	if(!this.limit && !this.selection){
 		this.db.findAll(this.collectionName, cb);
-	}else{
-		var i = 0;
-		var limit = this.limit;
-		var limiterator = function () {
-			console.log(i);
-			i++;
-			return i > limit;
-		}
+	}else if(!this.limit){
+		this.db.filterAll(this.collectionName, selecterator, cb)
+	}else if(!this.selection){
 		this.db.findUntil(this.collectionName, limiterator, cb);
+	}else{
+		
 	}
 	return this;	
 };
@@ -28,18 +35,7 @@ FQL.prototype.count = function (cb) {
 			if (err) { return console.log(err) }
 			cb(null, docs.length);
 		}
-	if(!this.limit){
-		this.db.findAll(this.collectionName, countCallback);
-	}else{
-		var i = 0;
-		var limit = this.limit;
-		var limiterator = function () {
-			console.log(i);
-			i++;
-			return i > limit;
-		}
-		this.db.findUntil(this.collectionName, limiterator, countCallback);
-	}
+	this.exec(countCallback);
 	
 	return this;
 };
@@ -49,7 +45,13 @@ FQL.prototype.limit = function (amount) {
 	return this;
 };
 
-FQL.prototype.select = function (str) {};
+FQL.prototype.select = function (str) {
+	if(str){
+		this.invertSelect = str[0] === "-" ? true : false;
+		this.selection = str.replace("-", "").split(" ");
+	}
+	return this;
+};
 
 FQL.prototype.where = function (criteria) {};
 

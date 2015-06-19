@@ -53,7 +53,6 @@ describe('Functional query language', function () {
 
 		it('constrains the amount of documents coming back', function (done) {
 			movies.limit(5).count(function (err, total) {
-				console.log(err, total);
 				if (err) return done(err);
 				expect(total).to.equal(5);
 				done();
@@ -69,9 +68,9 @@ describe('Functional query language', function () {
 		});
 
 		// extra credit
-		xit('will read as few files as possible', function (done) {
+		it('will read as few files as possible', function (done) {
 			spy.on(Database.prototype, '_read');
-			movies.limxit(2).count(function (err, total) {
+			movies.limit(2).count(function (err, total) {
 				if (err) return done(err);
 				expect(total).to.equal(2);
 				expect(Database.prototype._read).to.have.been.called.twice;
@@ -81,20 +80,20 @@ describe('Functional query language', function () {
 
 	});
 
-	xit('separate queries are independent', function (done) {
+	it('separate queries are independent', function (done) {
 		var otherMovies = new FQL(filmDB, 'movies-dir');
-		movies.limxit(5).count(function (err, total) {
+		movies.limit(5).count(function (err, total) {
 			if (err) return done(err);
 			expect(total).to.equal(5);
-			otherMovies.limxit(10).count(function (err, otherTotal) {
+			otherMovies.limit(10).count(function (err, otherTotal) {
 				expect(otherTotal).to.equal(10);
 				done();
 			});
 		});
 	});
 
-	xit('the same query can be run multiple times', function (done) {
-		movies.limxit(10).count(function (err, firstTotal) {
+	it('the same query can be run multiple times', function (done) {
+		movies.limit(10).count(function (err, firstTotal) {
 			if (err) return done(err);
 			movies.count(function (err, secondTotal) {
 				if (err) return done(err);
@@ -106,11 +105,11 @@ describe('Functional query language', function () {
 
 	describe('select method', function () {
 
-		xit('returns an FQL instance', function () {
+		it('returns an FQL instance', function () {
 			expect(movies.select()).to.be.instanceof(FQL);
 		});
 
-		xit('plucks out a value from each object when given a field', function (done) {
+		it('plucks out a value from each object when given a field', function (done) {
 			movies.select('name').exec(function (err, docs) {
 				if (err) return done(err);
 				expect(docs).to.have.length(36);
@@ -130,7 +129,7 @@ describe('Functional query language', function () {
 		});
 
 		// extra credit
-		xit('can invert selection with -', function (done) {
+		it('can invert selection with -', function (done) {
 			movies.select('-year').exec(function (err, docs) {
 				if (err) return done(err);
 				expect(docs[0]).to.have.all.keys('name', 'rank', 'id');

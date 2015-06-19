@@ -115,6 +115,7 @@ Database.prototype.filterAll = function (collectionName, predicate, cb) {
 	var db = this;
 	function onEach (key, done) {
 		db.find(collectionName, key, function (err, obj) {
+			console.log(obj, predicate);
 			if (err) done(false);
 			else done(predicate(obj));
 		});
