@@ -7,7 +7,6 @@ var Database = require('./driver');
 var FQL = require('./fql');
 
 var filmDB = new Database(__dirname + '/film-database');
-
 var seed = require('./seed');
 
 describe('Functional query language', function () {
@@ -24,9 +23,9 @@ describe('Functional query language', function () {
 
 	describe('exec method', function () {
 
-		xit('returns all documents by default', function (done) {
+		it('returns all documents by default', function (done) {
 			movies.exec(function (err, docs) {
-				if (err) return done(err);
+				if (err) { console.log(err); return done(err); }
 				expect(docs).to.have.length(36);
 				done()
 			});
@@ -36,7 +35,7 @@ describe('Functional query language', function () {
 
 	describe('count method', function () {
 
-		xit('counts all documents by default', function (done) {
+		it('counts all documents by default', function (done) {
 			movies.count(function (err, total) {
 				if (err) return done(err);
 				expect(total).to.equal(36);
@@ -48,20 +47,21 @@ describe('Functional query language', function () {
 
 	describe('limit method', function () {
 
-		xit('returns an FQL instance', function () {
-			expect(movies.limxit()).to.be.instanceof(FQL);
+		it('returns an FQL instance', function () {
+			expect(movies.limit()).to.be.instanceof(FQL);
 		});
 
-		xit('constrains the amount of documents coming back', function (done) {
-			movies.limxit(5).count(function (err, total) {
+		it('constrains the amount of documents coming back', function (done) {
+			movies.limit(5).count(function (err, total) {
+				console.log(err, total);
 				if (err) return done(err);
 				expect(total).to.equal(5);
 				done();
 			});
 		});
 
-		xit('works with exec as well as count', function (done) {
-			movies.limxit(1).exec(function (err, docs) {
+		it('works with exec as well as count', function (done) {
+			movies.limit(1).exec(function (err, docs) {
 				if (err) return done(err);
 				expect(docs[0].name).to.equal('Aliens');
 				done();

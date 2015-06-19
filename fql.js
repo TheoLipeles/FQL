@@ -1,12 +1,53 @@
 'use strict';
 
-function FQL (db, collectionName) {}
+function FQL (db, collectionName) {
+	this.db = db;
+	this.collectionName = collectionName;
+	this.keys = undefined;
+	return this;
+}
 
-FQL.prototype.exec = function (cb) {};
+FQL.prototype.exec = function (cb) {
+	if(!this.limit){
+		this.db.findAll(this.collectionName, cb);
+	}else{
+		var i = 0;
+		var limit = this.limit;
+		var limiterator = function () {
+			console.log(i);
+			i++;
+			return i > limit;
+		}
+		this.db.findUntil(this.collectionName, limiterator, cb);
+	}
+	return this;	
+};
 
-FQL.prototype.count = function (cb) {};
+FQL.prototype.count = function (cb) {
+	var countCallback = function(err, docs){
+			if (err) { return console.log(err) }
+			cb(null, docs.length);
+		}
+	if(!this.limit){
+		this.db.findAll(this.collectionName, countCallback);
+	}else{
+		var i = 0;
+		var limit = this.limit;
+		var limiterator = function () {
+			console.log(i);
+			i++;
+			return i > limit;
+		}
+		this.db.findUntil(this.collectionName, limiterator, countCallback);
+	}
+	
+	return this;
+};
 
-FQL.prototype.limit = function (amount) {};
+FQL.prototype.limit = function (amount) {
+	this.limit = amount;
+	return this;
+};
 
 FQL.prototype.select = function (str) {};
 
