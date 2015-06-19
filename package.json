@@ -4,8 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha *.spec.js --watch fql.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.2.1",
+    "chai": "^3.0.0",
+    "chai-spies": "^0.6.0",
+    "fs-extra": "^0.19.0",
+    "mocha": "^2.2.5",
+    "testem": "^0.8.3"
+  }
 }

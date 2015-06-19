@@ -1,0 +1,8 @@
+{
+	"launchers": {
+		"Mocha": {
+			"command": "./node_modules/.bin/mocha *.spec.js"
+		}
+	},
+	"launch_in_dev": ["Mocha"]
+}
